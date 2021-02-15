@@ -15,7 +15,7 @@ const saveSentiment = (sentiment) => (
   console.log(sentiment)
 );
 
-stockwits.getSentiment((res) => saveSentiment(res));
+stockwits.getTrending((res) => saveSentiment(res));
 
 mongoose.connect('mongodb://mongo:27017/icarus', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB is now connected'))
