@@ -1,0 +1,37 @@
+version: '2.3'
+services:
+  # client:
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #   image: btzc/client
+  #   ports: 
+  #     - "3000:3000"
+  #   volumes: 
+  #     - type: bind
+  #       source: ./client
+  #       target: /app
+  #     - /app/node_modules/
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: btzc/server
+    ports:
+      - "8000:8000"
+    volumes:
+      - type: bind
+        source: ./server
+        target: /app
+      - /app/node_modules/
+    links:
+      - mongo
+  mongo:
+    image: mongo:3.6.18-xenial
+    ports:
+      - "27017:27017"
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
