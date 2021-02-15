@@ -16,7 +16,7 @@ const saveAndUpdateSentiment = async (stock, sentiment) => {
   return await sentimentRecord.save();
 }
 
-const saveSentiments = (sentimentMap) => {
+const saveAndUpdateSentiments = (sentimentMap) => {
   for (const [stock, sentiment] of Object.entries(sentimentMap)) {
     saveAndUpdateSentiment(stock, sentiment);
   };
@@ -68,10 +68,15 @@ const buildSentimentMap = (analyses) => {
     }
   });
 
-  saveSentiments(sentimentMap);
-
   return sentimentMap;
 }
 
-exports.buildSentimentMap = buildSentimentMap;
-exports.analyzer = analyzer;
+const saveSentiments = (messages) => {
+  const analyses = messages.map(({ message, stock } = message) => analyzer(message, stock));
+  
+  const sentimentMap = buildSentimentMap(analyses);
+
+  saveAndUpdateSentiments(sentimentMap);
+}
+
+exports.saveSentiments = saveSentiments;

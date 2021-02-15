@@ -12,11 +12,9 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/api/nlp', nlpRouter);
 
-const saveSentiment = (res) => (console.log(res));
-
 schedule.scheduleJob('*/1 * * * *', function() {
   console.log('running job');
-  stockwits.getTrending((res) => saveSentiment(res));  
+  stockwits.getTrending();
 });
 
 mongoose.connect('mongodb://mongo:27017/icarus', { useNewUrlParser: true, useUnifiedTopology: true })
