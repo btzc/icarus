@@ -14,6 +14,7 @@
     "express": "^4.17.1",
     "mongoose": "^5.11.16",
     "natural": "^3.0.1",
+    "node-schedule": "^2.0.0",
     "nodemon": "^2.0.7",
     "snoowrap": "^1.22.0",
     "spelling-corrector": "^3.0.0",

@@ -2,6 +2,26 @@ const aposToLexForm = require('apos-to-lex-form');
 const natural = require('natural');
 const stopWords = require('stopword');
 
+const Sentiment = require('../models/sentiment.model').Sentiment;
+
+const saveAndUpdateSentiment = async (stock, sentiment) => {
+  const sentimentRecord = await Sentiment.findOne({ stock: stock });
+
+  if (!sentimentRecord) {
+    return await new Sentiment({stock, sentiment}).save();
+  }
+
+  sentimentRecord.sentiment += sentiment;
+
+  return await sentimentRecord.save();
+}
+
+const saveSentiments = (sentimentMap) => {
+  for (const [stock, sentiment] of Object.entries(sentimentMap)) {
+    saveAndUpdateSentiment(stock, sentiment);
+  };
+};
+
 const buildAnalysis = (sentiment, symbol) => {
   let result = 0;
 
@@ -47,6 +67,8 @@ const buildSentimentMap = (analyses) => {
       sentimentMap[symbol] = sentiment;
     }
   });
+
+  saveSentiments(sentimentMap);
 
   return sentimentMap;
 }

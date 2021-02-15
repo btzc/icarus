@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const schedule = require('node-schedule');
 
 const stockwits = require('./modules/stocktwits');
 
@@ -11,11 +12,12 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/api/nlp', nlpRouter);
 
-const saveSentiment = (sentiment) => (
-  console.log(sentiment)
-);
+const saveSentiment = (res) => (console.log(res));
 
-stockwits.getTrending((res) => saveSentiment(res));
+schedule.scheduleJob('*/1 * * * *', function() {
+  console.log('running job');
+  stockwits.getTrending((res) => saveSentiment(res));  
+});
 
 mongoose.connect('mongodb://mongo:27017/icarus', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB is now connected'))
