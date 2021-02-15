@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const schedule = require('node-schedule');
 
-const stockwits = require('./modules/stocktwits');
+const stockwits = require('./services/stocktwits');
 
 const nlpRouter = require('./routes/nlp');
 
