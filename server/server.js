@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const schedule = require('node-schedule');
+const Memcached = require('memcached');
 
 const stocktwits = require('./services/stocktwits');
 
@@ -13,6 +14,13 @@ const sentimentRouter = require('./routes/sentiment');
 //   stocktwits.getTrending();
 // });
 
+const memcached = new Memcached('memcached:11211');
+memcached.set('foo', 'bar', 10, function (err) { if (err) console.log(err) });
+memcached.gets('foo', function (err, data) {
+  console.log(data.foo);
+});
+
+
 mongoose.connect('mongodb://mongo:27017/icarus', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB is now connected'))
   .catch((err) => console.log(err));
@@ -21,7 +29,6 @@ let clients = [];
 let nests = [];
 
 function eventsHandler(req, res) {
-  console.log('in the events handler');
   const headers = {
     'Content-Type': 'text/event-stream',
     'Connection': 'keep-alive',
@@ -55,7 +62,6 @@ function sendEventsToAll(newNest) {
 async function addNest(req, res) {
   const newNest = req.body
   nests.push(newNest);
-  console.log(nests);
 
   res.json(newNest);
 
