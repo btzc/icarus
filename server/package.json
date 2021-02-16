@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "apos-to-lex-form": "^1.0.5",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.11.16",
     "natural": "^3.0.1",
