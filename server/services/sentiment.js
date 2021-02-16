@@ -79,4 +79,11 @@ const saveSentiments = (messages) => {
   saveAndUpdateSentiments(sentimentMap);
 }
 
+const getSentiments = async () => {
+  const sentimentRecords = await Sentiment.find({});
+
+  return sentimentRecords;
+}
+
 exports.saveSentiments = saveSentiments;
+exports.getSentiments = getSentiments;

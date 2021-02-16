@@ -3,18 +3,18 @@ const app = express();
 const mongoose = require('mongoose');
 const schedule = require('node-schedule');
 
-const stockwits = require('./services/stocktwits');
+const stocktwits = require('./services/stocktwits');
 
-const nlpRouter = require('./routes/nlp');
+const sentimentRouter = require('./routes/sentiment');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/api/nlp', nlpRouter);
+app.use('/sentiments', sentimentRouter);
 
 schedule.scheduleJob('*/1 * * * *', function() {
   console.log('running job');
-  stockwits.getTrending();
+  stocktwits.getTrending();
 });
 
 mongoose.connect('mongodb://mongo:27017/icarus', { useNewUrlParser: true, useUnifiedTopology: true })
