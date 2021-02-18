@@ -7,7 +7,7 @@ const App = () => {
 
   useEffect( () => {
     if (!listening) {
-      const events = new EventSource('http://localhost:8000/events');
+      const events = new EventSource('http://localhost:8000/events/sentiments');
       events.onmessage = (event) => {
         const parsedData = JSON.parse(event.data);
 

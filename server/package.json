@@ -13,13 +13,11 @@
     "apos-to-lex-form": "^1.0.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "memcached": "^2.2.2",
     "mongoose": "^5.11.16",
     "natural": "^3.0.1",
     "node-schedule": "^2.0.0",
     "nodemon": "^2.0.7",
     "snoowrap": "^1.22.0",
-    "spelling-corrector": "^3.0.0",
     "stocktwits": "^0.0.4",
     "stopword": "^1.0.6"
   }

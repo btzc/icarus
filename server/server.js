@@ -9,10 +9,10 @@ const stocktwits = require('./services/stocktwits');
 const sentimentRouter = require('./routes/sentiment');
 const eventsRouter = require('./routes/event');
 
-// schedule.scheduleJob('*/1 * * * *', function() {
-//   console.log('running job');
-//   stocktwits.getTrending();
-// })
+schedule.scheduleJob('*/1 * * * *', function() {
+  console.log('running job');
+  stocktwits.getTrending();
+});
 
 mongoose.connect('mongodb://mongo:27017/icarus', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB is now connected'))
