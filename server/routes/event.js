@@ -3,12 +3,13 @@ const router = express.Router();
 
 const SentimentService = require('../services/sentiment');
 const ClientService = require('../services/client');
-
-const Helpers = require('../helpers/helpers');
+const EventService = require('../services/event');
 
 let sentiments = [];
 
-async function eventsHandler(req, res) {
+const setData = data => (`data: ${JSON.stringify(data)}\n\n`);
+
+const eventsHandler = async (req, res) => {
   const headers = {
     'Content-Type': 'text/event-stream',
     'Connection': 'keep-alive',
@@ -19,31 +20,21 @@ async function eventsHandler(req, res) {
 
   const sentiments = await SentimentService.getSentiments();
 
-  const data = `data: ${JSON.stringify(sentiments[0])}\n\n`;
+  const data = setData(sentiments);
   res.write(data);
 
-  const clientId = await Helpers.generateClientUUID();
-  const client = {
-    id: clientId,
-    res: res
-  };
+  ClientService.handleNewClient(req, res);
+};
 
-  ClientService.set(client);
-
-  req.on('close', () => {
-    console.log(`${clientId} Connection closed`);
-    ClientService.remove(clientId);
-  });
-}
 // Iterate clients list and use write res object method to send new nest
-function sendEventsToAll(newSentiment) {
+const sendEventsToAll = (sentiment) => {
   const clients = ClientService.getAll();
   for (const clientId in clients) {
-    clients[clientId].write(`data: ${JSON.stringify(newSentiment)}\n\n`);
+    clients[clientId].write(setData(sentiment));
   }
 }
 // Middleware for POST /nest endpoint
-async function addSentiments(req, res) {
+const addSentiments = async (req, res) => {
   const newSentiment = req.body
   SentimentService.saveSentiments([]);
   sentiments.push(newSentiment);
