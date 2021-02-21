@@ -26,25 +26,6 @@ const eventsHandler = async (req, res) => {
   ClientService.handleNewClient(req, res);
 };
 
-// Iterate clients list and use write res object method to send new nest
-const sendEventsToAll = (sentiment) => {
-  const clients = ClientService.getAll();
-  for (const clientId in clients) {
-    clients[clientId].write(setData(sentiment));
-  }
-}
-// Middleware for POST /nest endpoint
-const addSentiments = async (req, res) => {
-  const newSentiment = req.body
-  SentimentService.saveSentiments([]);
-  sentiments.push(newSentiment);
-
-  res.json(newSentiment);
-
-  return sendEventsToAll(newSentiment);
-}
-
 router.get('/sentiments', eventsHandler);
-router.post('/sentiments', addSentiments);
 
 module.exports = router;

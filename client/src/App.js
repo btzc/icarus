@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const App = () => {
-  const [ nests, setNests ] = useState([]);
+  const [ sentiments, setSentiments ] = useState([]);
   const [ listening, setListening ] = useState(false);
 
   useEffect( () => {
@@ -10,30 +10,28 @@ const App = () => {
       const events = new EventSource('http://localhost:8000/events/sentiments');
       events.onmessage = (event) => {
         const parsedData = JSON.parse(event.data);
-
-        setNests((nests) => nests.concat(parsedData));
+        console.log(parsedData);
+        setSentiments((sentiments) => [...sentiments, ...parsedData]);
       };
 
       setListening(true);
     }
-  }, [listening, nests]);
+  }, [listening, sentiments]);
 
   return (
     <table className="stats-table">
       <thead>
         <tr>
-          <th>Momma</th>
+          <th>Stock</th>
           <th>Eggs</th>
           <th>Temperature</th>
         </tr>
       </thead>
       <tbody>
         {
-          nests.map((nest, i) =>
+          sentiments.map((sentiment, i) =>
             <tr key={i}>
-              <td>{nest.momma}</td>
-              <td>{nest.eggs}</td>
-              <td>{nest.temperature} ℃</td>
+              <td>{ sentiment.stock }</td>
             </tr>
           )
         }

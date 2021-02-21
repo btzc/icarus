@@ -16,10 +16,14 @@ const saveAndUpdateSentiment = async (stock, sentiment) => {
   return await sentimentRecord.save();
 }
 
-const saveAndUpdateSentiments = (sentimentMap) => {
+const saveAndUpdateSentiments = async (sentimentMap) => {
+  const sentiments = [];
   for (const [stock, sentiment] of Object.entries(sentimentMap)) {
-    saveAndUpdateSentiment(stock, sentiment);
+    const savedSentiment = await saveAndUpdateSentiment(stock, sentiment);
+    sentiments.push(savedSentiment);
   };
+
+  return sentiments;
 };
 
 const buildAnalysis = (sentiment, symbol) => {
@@ -71,12 +75,12 @@ const buildSentimentMap = (analyses) => {
   return sentimentMap;
 }
 
-const saveSentiments = (messages) => {
+const saveSentiments = async (messages) => {
   const analyses = messages.map(({ message, stock } = message) => analyzer(message, stock));
   
   const sentimentMap = buildSentimentMap(analyses);
 
-  saveAndUpdateSentiments(sentimentMap);
+  return await saveAndUpdateSentiments(sentimentMap);
 }
 
 const getSentiments = async () => {
