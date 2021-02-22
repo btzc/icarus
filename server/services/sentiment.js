@@ -26,7 +26,7 @@ const saveAndUpdateSentiments = async (sentimentMap) => {
   return sentiments;
 };
 
-const buildAnalysis = (sentiment, symbol) => {
+const buildAnalysis = (sentiment, stock) => {
   let result = 0;
 
   if (sentiment > 0) {
@@ -39,7 +39,7 @@ const buildAnalysis = (sentiment, symbol) => {
 
   return {
     sentiment: result,
-    symbol: symbol
+    stock: stock
   };
 }
 
@@ -64,11 +64,11 @@ const analyzer = (text, symbol) => {
 const buildSentimentMap = (analyses) => {
   const sentimentMap = {};
 
-  analyses.forEach(({sentiment, symbol} = analysis) => {
-    if (sentimentMap[symbol]) {
-      sentimentMap[symbol] += sentiment;
+  analyses.forEach(({sentiment, stock} = analysis) => {
+    if (sentimentMap[stock]) {
+      sentimentMap[stock] += sentiment;
     } else {
-      sentimentMap[symbol] = sentiment;
+      sentimentMap[stock] = sentiment;
     }
   });
 

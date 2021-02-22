@@ -3,9 +3,6 @@ const router = express.Router();
 
 const SentimentService = require('../services/sentiment');
 const ClientService = require('../services/client');
-const EventService = require('../services/event');
-
-let sentiments = [];
 
 const setData = data => (`data: ${JSON.stringify(data)}\n\n`);
 

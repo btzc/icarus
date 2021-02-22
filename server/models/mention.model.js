@@ -7,13 +7,22 @@ const mentionSchema = new Schema({
     type: String,
     unique: true
   },
-  stock: {
+  message: {
+    type: String
+  },
+  username: {
     type: String
   },
   source: {
     type: String
   },
-  message: {
+  stock: {
+    type: String
+  },
+  platform: {
+    type: String
+  },
+  date: {
     type: String
   }
 });

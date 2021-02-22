@@ -5,38 +5,62 @@ const App = () => {
   const [ sentiments, setSentiments ] = useState([]);
   const [ listening, setListening ] = useState(false);
 
-  useEffect( () => {
-    if (!listening) {
-      const events = new EventSource('http://localhost:8000/events/sentiments');
-      events.onmessage = (event) => {
-        const parsedData = JSON.parse(event.data);
-        console.log(parsedData);
-        setSentiments((sentiments) => [...sentiments, ...parsedData]);
-      };
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetch('http://localhost:8000/sentiments/all');
+      const { sentiments } = await data.json();
 
-      setListening(true);
+      setSentiments(sentiments);
     }
+
+    const updateSentiments = (newSentiments) => {
+      newSentiments.forEach(newSentiment => {
+        const index = sentiments.findIndex(sentiment => sentiment.stock === newSentiment.stock);
+        index === -1 ? sentiments.push(newSentiment) : sentiments[index] = newSentiment
+      });
+
+      return sentiments;
+    }
+
+    const subscribeToSSE = async () => {
+      if (!listening) {
+        const events = new EventSource('http://localhost:8000/events/sentiments');
+        events.onmessage = (event) => {
+          const newSentiments = JSON.parse(event.data);
+          const updatedSentiments = updateSentiments(newSentiments);
+
+          setSentiments(updatedSentiments);
+        };
+  
+        setListening(true);
+      }
+    }
+
+    getData();
+    subscribeToSSE();
   }, [listening, sentiments]);
 
   return (
-    <table className="stats-table">
-      <thead>
-        <tr>
-          <th>Stock</th>
-          <th>Eggs</th>
-          <th>Temperature</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          sentiments.map((sentiment, i) =>
-            <tr key={i}>
-              <td>{ sentiment.stock }</td>
-            </tr>
-          )
-        }
-      </tbody>
-    </table>
+    <React.Fragment>
+      <table className="stats-table">
+        <thead>
+          <tr>
+            <th>Stock</th>
+            <th>Sentiment</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            sentiments.map((sentiment, i) =>
+              <tr key={i}>
+                <td>{ sentiment.stock }</td>
+                <td>{ sentiment.sentiment }</td>
+              </tr>
+            )
+          }
+        </tbody>
+      </table>
+    </React.Fragment>
   );
 }
 
