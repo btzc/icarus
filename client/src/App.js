@@ -51,8 +51,8 @@ const App = () => {
         </thead>
         <tbody>
           {
-            sentiments.map((sentiment, i) =>
-              <tr key={i}>
+            sentiments.map(sentiment =>
+              <tr key={sentiment.stock}>
                 <td>{ sentiment.stock }</td>
                 <td>{ sentiment.sentiment }</td>
               </tr>

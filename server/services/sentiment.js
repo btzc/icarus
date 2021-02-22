@@ -84,7 +84,7 @@ const saveSentiments = async (messages) => {
 }
 
 const getSentiments = async () => {
-  const sentimentRecords = await Sentiment.find({});
+  const sentimentRecords = await Sentiment.find().sort({sentiment: -1});
 
   return sentimentRecords;
 }
