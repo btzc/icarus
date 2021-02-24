@@ -43,24 +43,20 @@ const StocksPage = () => {
       return oldSentiments;
     }
 
-    const subscribeToSSE = () => {
-      if (sentiments.length === 0) return; 
+    if (sentiments.length === 0) return; 
 
-      if (!listening) {
-        const events = new EventSource('http://localhost:8000/events/sentiments');
+    const events = new EventSource('http://localhost:8000/events/sentiments');
 
-        events.onmessage = (event) => {
-          const newSentiments = JSON.parse(event.data);
-          const updatedSentiments = updateSentiments(newSentiments);
+    events.onmessage = (event) => {
+      const newSentiments = JSON.parse(event.data);
+      const updatedSentiments = updateSentiments(newSentiments);
 
-          setSentiments(updatedSentiments);
-        };
-  
-        setListening(true);
-      }
+      setSentiments(updatedSentiments);
+    };
+
+    return () => {
+      events.close();
     }
-
-    subscribeToSSE();
   }, [sentiments]);
 
   return (

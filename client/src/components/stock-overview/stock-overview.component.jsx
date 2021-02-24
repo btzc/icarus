@@ -26,14 +26,34 @@ const StockOverview = () => {
     }
 
     getMentions();
-  });
+  }, []);
+
+  useEffect(() => {
+    if (mentions.length === 0) return; 
+
+    const events = new EventSource(`http://localhost:8000/events/mentions/${stock}`)
+
+    events.onmessage = (event) => {
+      const newMentions = JSON.parse(event.data);
+      const updatedMentions = [...newMentions, ...mentions];
+
+      setMentions(updatedMentions);
+    };
+
+    return () => {
+      events.close();
+    }
+  }, [mentions]);
 
   return (
     <div>
       <h1>{ stock }</h1>
       {
         mentions.map(mention =>
-          <Mention {...mention} />
+          <Mention
+            key={mention.mentionId}
+            {...mention}
+          />
       )
       }
     </div>

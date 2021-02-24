@@ -4,13 +4,27 @@ const MentionService = require('./mention');
 const SentimentService = require('./sentiment')
 const ClientService = require('../services/client');
 
-const setData = data => (`data: ${JSON.stringify(data)}\n\n`);
+const Helpers = require('../helpers/helpers');
 
-// Iterate clients list and use write res object method to send new nest
-const sendEventsToAll = (sentiments) => {
+const sendMentionEventsToAll = (mentions) => {
   const clients = ClientService.getAll();
-  for (const clientId in clients) {
-    clients[clientId].write(setData(sentiments));
+  const stockStreams = Array.from(new Set(mentions.map(({stock}) => stock)));
+
+  stockStreams.forEach(stockStream => {
+    for (const clientId in clients[stockStream]) {
+      const stockMentions = mentions.filter(mention => mention.stock === stockStream);
+
+      clients[stockStream][clientId].write(Helpers.setData(stockMentions));
+    }
+  })
+}
+
+const sendSentimentEventsToAll = (sentiments) => {
+  const clients = ClientService.getAll();
+  const stream = clients.sentiments;
+
+  for (const clientId in stream) {
+    stream[clientId].write(Helpers.setData(sentiments));
   }
 }
 
@@ -22,9 +36,10 @@ const getTrending = () => {
 
     const source = 'stocktwits';
     const mentions = await MentionService.saveMentions(messages, source);
-    const sentiments = await SentimentService.saveSentiments(mentions);
+    sendMentionEventsToAll(mentions);
 
-    sendEventsToAll(sentiments)
+    const sentiments = await SentimentService.saveSentiments(mentions);
+    sendSentimentEventsToAll(sentiments)
   });
 };
 

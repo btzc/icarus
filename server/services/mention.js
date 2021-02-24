@@ -30,7 +30,9 @@ const saveMentions = async (messages, platform) => (
 );
 
 const findMentions = async ( stock ) => {
-  return await Mention.find({ stock: stock });
+  return await Mention.find({ stock: stock })
+    .sort({date: -1})
+    .limit(15);
 }
 
 exports.saveMentions = saveMentions;

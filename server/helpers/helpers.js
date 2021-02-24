@@ -1,10 +1,3 @@
-const crypto = require('crypto');
+const setData = data => (`data: ${JSON.stringify(data)}\n\n`);
 
-const generateClientUUID = async () => {
-  const buffer = await crypto.randomBytes(24);
-  const token = buffer.toString('hex');
-  
-  return token;
-}
-
-exports.generateClientUUID = generateClientUUID;
+exports.setData = setData;
