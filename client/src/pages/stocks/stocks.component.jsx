@@ -1,23 +1,32 @@
-import React from 'react';
+import React, {
+  lazy,
+  Suspense
+} from 'react';
 
 import {
   Route
 } from "react-router-dom";
 
-import StocksOverview from '../../components/stocks-overview/stocks-overview.component';
-import Stock from '../../components/stock-overview/stock-overview.component';
+const StocksOverview = lazy(() => import('../../components/stocks-overview/stocks-overview.component'));
+const StockOverview = lazy(() => import('../../components/stock-overview/stock-overview.component'));
 
 const StocksPage = ({ match }) => (
   <div>
     <Route 
       exact
       path={`${match.path}`}
-      component={StocksOverview}
-    />
+    >
+      <Suspense fallback={<div>Loading...</div>}>
+        <StocksOverview />
+      </Suspense>
+    </Route>
     <Route 
       path={`${match.path}/:stock`}
-      component={Stock}
-    />
+    >
+      <Suspense fallback={<div>Loading...</div>}>
+        <StockOverview />
+      </Suspense>
+    </Route>
   </div>
 );
 

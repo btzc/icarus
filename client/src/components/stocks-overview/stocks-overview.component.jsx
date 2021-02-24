@@ -4,39 +4,51 @@ import React, {
 } from 'react';
 
 import {
-  Link
+  Link,
+  useRouteMatch
 } from 'react-router-dom';
 
 import './stocks.styles.css';
 
-const StocksPage = ({ match }) => {
+const StocksPage = () => {
   const [ sentiments, setSentiments ] = useState([]);
   const [ listening, setListening ] = useState(false);
+
+  const match = useRouteMatch();
 
   useEffect(() => {
     const getData = async () => {
       try {
         const data = await fetch('http://localhost:8000/sentiments/all');
-        const { sentiments } = await data.json();
+        const json = await data.json();
   
-        setSentiments(sentiments);
+        setSentiments(json.sentiments);
       } catch (err) {
         return err;
       }
     }
 
+    getData();
+  }, []);
+
+  useEffect(() => {
     const updateSentiments = (newSentiments) => {
+      const oldSentiments = [...sentiments];
+
       newSentiments.forEach(newSentiment => {
-        const index = sentiments.findIndex(sentiment => sentiment.stock === newSentiment.stock);
-        index === -1 ? sentiments.push(newSentiment) : sentiments[index] = newSentiment
+        const index = oldSentiments.findIndex(oldSentiment => oldSentiment.stock === newSentiment.stock);
+        index === -1 ? oldSentiments.push(newSentiment) : oldSentiments[index] = newSentiment;
       });
 
-      return sentiments;
+      return oldSentiments;
     }
 
     const subscribeToSSE = () => {
+      if (sentiments.length === 0) return; 
+
       if (!listening) {
         const events = new EventSource('http://localhost:8000/events/sentiments');
+
         events.onmessage = (event) => {
           const newSentiments = JSON.parse(event.data);
           const updatedSentiments = updateSentiments(newSentiments);
@@ -48,9 +60,8 @@ const StocksPage = ({ match }) => {
       }
     }
 
-    getData();
     subscribeToSSE();
-  }, [listening, sentiments]);
+  }, [sentiments]);
 
   return (
     <div>

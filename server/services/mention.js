@@ -11,6 +11,7 @@ const saveMention = async ({ id, body, user, source, symbols, created_at }, plat
       source: source.url,
       stock: symbols[0].symbol,
       platform: platform,
+
       date: created_at
     }).save();
 
@@ -28,4 +29,9 @@ const saveMentions = async (messages, platform) => (
   ).filter(message => message !== undefined)
 );
 
+const findMentions = async ( stock ) => {
+  return await Mention.find({ stock: stock });
+}
+
 exports.saveMentions = saveMentions;
+exports.findMentions = findMentions;

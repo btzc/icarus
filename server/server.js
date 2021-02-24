@@ -8,6 +8,7 @@ const stocktwits = require('./services/stocktwits');
 
 const sentimentRouter = require('./routes/sentiment');
 const eventsRouter = require('./routes/event');
+const mentionsRouter = require('./routes/mention');
 
 schedule.scheduleJob('*/1 * * * *', function() {
   console.log('running job');
@@ -26,8 +27,7 @@ app.use(cors());
 
 app.use('/sentiments', sentimentRouter);
 app.use('/events', eventsRouter);
-
-app.get('/status', (req, res) => res.json({clients: clients.length}));
+app.use('/mentions', mentionsRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
