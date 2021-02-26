@@ -6,15 +6,14 @@ const ClientService = require('../services/client');
 
 const Helpers = require('../helpers/helpers');
 
-const sendMentionEventsToAll = (mentions) => {
+const sendMentionEventsToAll = (stockStreams) => {
   const clients = ClientService.getAll();
-  const stockStreams = Array.from(new Set(mentions.map(({stock}) => stock)));
 
-  stockStreams.forEach(stockStream => {
+  stockStreams.forEach(async (stockStream) => {
     for (const clientId in clients[stockStream]) {
-      const stockMentions = mentions.filter(mention => mention.stock === stockStream);
+      const recentMentions = await MentionService.findMentions(stockStream);
 
-      clients[stockStream][clientId].write(Helpers.setData(stockMentions));
+      clients[stockStream][clientId].write(Helpers.setData(recentMentions));
     }
   })
 }
@@ -36,10 +35,12 @@ const getTrending = () => {
 
     const source = 'stocktwits';
     const mentions = await MentionService.saveMentions(messages, source);
-    sendMentionEventsToAll(mentions);
+    const stockStreams = Array.from(new Set(mentions.map(({stock}) => stock)));
+    sendMentionEventsToAll(stockStreams);
 
-    const sentiments = await SentimentService.saveSentiments(mentions);
-    sendSentimentEventsToAll(sentiments)
+    await SentimentService.saveSentiments(mentions);
+    const recentSentiments = await SentimentService.getSentiments();
+    sendSentimentEventsToAll(recentSentiments)
   });
 };
 

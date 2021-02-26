@@ -7,10 +7,13 @@ import {
   useParams
 } from 'react-router-dom';
 
+import Button from '@material-ui/core/Button';
+
 import Mention from '../../components/mention/mention.component';
 
 const StockOverview = () => {
   const [mentions, setMentions] = useState([]);
+
   const { stock } = useParams();
 
   useEffect(() => {
@@ -26,27 +29,27 @@ const StockOverview = () => {
     }
 
     getMentions();
-  }, []);
+  }, [stock]);
 
   useEffect(() => {
-    if (mentions.length === 0) return; 
+    if (mentions.length === 0) return;
 
     const events = new EventSource(`http://localhost:8000/events/mentions/${stock}`)
 
     events.onmessage = (event) => {
       const newMentions = JSON.parse(event.data);
-      const updatedMentions = [...newMentions, ...mentions];
 
-      setMentions(updatedMentions);
+      setMentions(newMentions);
     };
 
     return () => {
       events.close();
     }
-  }, [mentions]);
+  }, [mentions, stock]);
 
   return (
     <div>
+      <Button>Back</Button>
       <h1>{ stock }</h1>
       {
         mentions.map(mention =>

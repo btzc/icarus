@@ -83,10 +83,24 @@ const saveSentiments = async (messages) => {
   return await saveAndUpdateSentiments(sentimentMap);
 }
 
-const getSentiments = async () => {
-  const sentimentRecords = await Sentiment.find().sort({sentiment: -1});
+const getSentiments = async (page = 0) => {
+  const NUM_DOCUMENTS = 50;
 
-  return sentimentRecords;
+  const sentimentDocuments = 
+    await Sentiment
+      .find()
+      .skip(page * NUM_DOCUMENTS)
+      .limit(NUM_DOCUMENTS)
+      .sort({sentiment: -1});
+
+  const totalDocuments = 
+    await Sentiment
+      .estimatedDocumentCount();
+
+  return {
+    documents: sentimentDocuments,
+    totalDocuments: totalDocuments
+  };
 }
 
 exports.saveSentiments = saveSentiments;

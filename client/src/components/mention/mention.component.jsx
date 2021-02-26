@@ -1,13 +1,37 @@
 import React from 'react';
 
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+
+import './mention.styles.css';
+
 const Mention = ({ mentionId, message, username, platform, date}) => (
-  <div>
-    <p>Username: { username }</p>
-    <p>Date: { date }</p>
-    <p>Platform: { platform }</p>
-    <p>Url: {`https://stocktwits.com/${username}/message/${mentionId}`}</p>
-    <p>Message: { message.replace('&#39;', '\'') }</p>
-  </div>
+  <Card className="card">
+    <CardContent>
+      <Typography>
+        Username: { username }
+      </Typography>
+      <Typography>
+        Platform: { platform }
+      </Typography>
+      <Typography>
+        Platform: { platform }
+      </Typography>
+      <Typography>
+        Url: {`https://stocktwits.com/${username}/message/${mentionId}`}
+      </Typography>
+      <Typography>
+        Message: { 
+          message.replace(/&#(\d+);/g, function(match, dec) {
+            if (match) {
+              return String.fromCharCode(dec);
+            }
+          })
+        }
+      </Typography>
+    </CardContent>
+  </Card>
 );
 
 export default Mention

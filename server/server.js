@@ -11,7 +11,6 @@ const eventsRouter = require('./routes/event');
 const mentionsRouter = require('./routes/mention');
 
 schedule.scheduleJob('*/1 * * * *', function() {
-  console.log('running job');
   stocktwits.getTrending();
 });
 

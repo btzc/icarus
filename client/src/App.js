@@ -9,20 +9,24 @@ import {
 
 import StocksPage from './pages/stocks/stocks.component';
 
+import './App.css';
+
 const App = () => (
-  <Router>
-    <Switch>
-      <Redirect
-        from="/"
-        to="/stocks"
-        exact
-      />
-      <Route
-        path="/stocks"
-        component={StocksPage}
-      />
-    </Switch>
-  </Router>
+  <div className="app">
+    <Router>
+      <Switch>
+        <Redirect
+          from="/"
+          to="/stocks"
+          exact
+        />
+        <Route
+          path="/stocks"
+          component={StocksPage}
+        />
+      </Switch>
+    </Router>
+  </div>
 );
 
 export default App;

@@ -30,11 +30,8 @@ const handleNewClient = async (req, res, source) => {
   const client = createClient(res, clientId);
   set(client, source);
 
-  console.log(`Client ${clientId} just connected!`);
-
   req.on('close', () => {
     remove(clientId, source);
-    console.log(`closing connection for Client ${clientId}`);
   });
 };
 
