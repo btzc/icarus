@@ -10,7 +10,7 @@ const sentimentRouter = require('./routes/sentiment');
 const eventsRouter = require('./routes/event');
 const mentionsRouter = require('./routes/mention');
 
-schedule.scheduleJob('*/1 * * * *', function() {
+schedule.scheduleJob('*/30 * * * * *', function() {
   stocktwits.getTrending();
 });
 

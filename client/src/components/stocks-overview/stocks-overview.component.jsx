@@ -17,6 +17,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Pagination from '@material-ui/lab/Pagination';
 
+import "./stocks-overview.styles.css";
+
 const StocksPage = () => {
   const [ sentiments, setSentiments ] = useState([]);
   const [ page, setPage ] = useState(1);
@@ -77,10 +79,11 @@ const StocksPage = () => {
 
   const calculateTotalPages = totalDocuments => Math.ceil(totalDocuments / 50);
 
-  const handlePageChange = (event, value) => {
+  const scrollToTop = () => window.scrollTo(0,0);
 
+  const handlePageChange = (event, value) => {
     setPage(value);
-    window.scrollTo(0, 0)
+    scrollToTop();
   }
 
   return (

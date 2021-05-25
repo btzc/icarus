@@ -16,7 +16,7 @@ const Mention = ({ mentionId, message, username, platform, date}) => (
         Platform: { platform }
       </Typography>
       <Typography>
-        Platform: { platform }
+        Date: { date = new Date(date).toLocaleDateString(undefined, {day:'2-digit'}) + '-' + new Date(date).toLocaleDateString(undefined, {month:'short'}) + '-' + new Date(date).toLocaleDateString(undefined, {year:'numeric'}) }
       </Typography>
       <Typography>
         Url: {`https://stocktwits.com/${username}/message/${mentionId}`}
